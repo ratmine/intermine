@@ -18,7 +18,7 @@ public class DASRequest extends AbstractMap<String, String>
     }
 
     DASRequest(Map<String, String> mappings) {
-        for (Entry<String, String> pair: mappings) {
+        for (Entry<String, String> pair: mappings.entrySet()) {
             addArgument(pair.getKey(), pair.getValue());
         }
     }

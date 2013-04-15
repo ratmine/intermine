@@ -1,8 +1,13 @@
 package org.intermine.bio.das.model;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
 public class Source
 {
-    private String uri, title, docHref, description;
+    private String uri, title, docHref, description, maintainer;
 
     private List<Version> versions = new ArrayList<Version>();
     
@@ -30,7 +35,11 @@ public class Source
         return description;
     }
 
+    public String getMaintainer() {
+        return maintainer;
+    }
+
     public Collection<Version> getVersions() {
-        return Collection.unmodifiableList(versions);
+        return Collections.unmodifiableList(versions);
     }
 }

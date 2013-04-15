@@ -23,22 +23,25 @@ public class Coordinates
         return dataType;
     }
 
-    public getAuthority() {
+    public String getAuthority() {
         return authority;
     }
 
-    public getTaxonId() {
+    public String getTaxonId() {
         return taxonid;
     }
 
-    public getVersion() {
+    public String getVersion() {
         return version;
     }
 
-    public getCoordString() {
-        return String.format("%s_%s,%s,%s", authority, version, dataType, species);
+    public String getTestRange() {
+        return testRange;
     }
 
+    public String getCoordString() {
+        return String.format("%s_%s,%s,%s", authority, version, dataType, species);
+    }
 
 }
 

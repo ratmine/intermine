@@ -1,5 +1,10 @@
 package org.intermine.bio.das;
 
+import java.util.Map.Entry;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+
 class RequestParser
 {
 
@@ -15,9 +20,11 @@ class RequestParser
         } else {
             throw new DASException("Expected one or two path segments, not " + parts.length);
         }
-        for (Entry<String, String[]> params: raw.getParameterMap()) {
-            for (String val: params.getValue()) {
-                processed.addArgument(params.getKey(), val);
+        @SuppressWarnings("unchecked")
+        Set<Entry<String, String[]>> params = raw.getParameterMap().entrySet();
+        for (Entry<String, String[]> param: params) {
+            for (String val: param.getValue()) {
+                processed.addArgument(param.getKey(), val);
             }
         }
         return processed;

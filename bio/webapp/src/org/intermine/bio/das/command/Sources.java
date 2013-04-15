@@ -1,10 +1,15 @@
 package org.intermine.bio.das.command;
 
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map.Entry;
 
 import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
+import org.intermine.bio.das.DASRequest;
 import org.intermine.bio.das.model.Source;
 import org.intermine.bio.das.model.Version;
 import org.intermine.bio.das.model.Coordinates;
@@ -22,7 +27,7 @@ public class Sources
         organism = request.get("organism");
     }
 
-    public serve(OutputStream out) {
+    public void serve(OutputStream out) throws XMLStreamException {
         XMLOutputFactory factory = XMLOutputFactory.newInstance();
         XMLStreamWriter writer = factory.createXMLStreamWriter(out);
 
@@ -68,7 +73,7 @@ public class Sources
                     writer.writeEndElement();
                 }
 
-                for (Entry<String, String> prop: version.getExtraProperties()) {
+                for (Entry<String, String> prop: version.getExtraProperties().entrySet()) {
                     writer.writeStartElement("PROP");
                     writer.writeAttribute("name", prop.getKey());
                     writer.writeAttribute("value", prop.getValue());
