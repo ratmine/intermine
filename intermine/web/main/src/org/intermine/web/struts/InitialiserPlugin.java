@@ -773,7 +773,10 @@ public class InitialiserPlugin implements PlugIn
             ((ObjectStoreWriterInterMineImpl) profileManager.getProfileObjectStoreWriter())
                 .getDatabase().shutdown();
         }
-        ((ObjectStoreInterMineImpl) os).getDatabase().shutdown();
+        Database db = ((ObjectStoreInterMineImpl) os).getDatabase();
+        if (db != null) {
+            db.shutdown();
+        }
     }
 
 
