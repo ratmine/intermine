@@ -126,3 +126,13 @@
   <servlet-name>genomic-region-sequence-export</servlet-name>
   <url-pattern>/service/regions/sequence</url-pattern>
 </servlet-mapping>
+
+<servlet>
+  <servlet-name>das-server</servlet-name>
+  <servlet-class>org.intermine.bio.das.Server</servlet-class>
+</servlet>
+
+<servlet-mapping>
+  <servlet-name>das-server</servlet-name>
+  <url-pattern>/service/das/*</url-pattern>
+</servlet-mapping>
