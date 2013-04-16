@@ -1,5 +1,7 @@
 package org.intermine.bio.das;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -7,13 +9,20 @@ import javax.servlet.http.HttpServletRequest;
 
 class RequestParser
 {
+    private static final Set<String> COMMANDS = new HashSet<String>(
+        Arrays.asList("sources", "entry_points", "sequence"));
 
     DASRequest parse(HttpServletRequest raw) throws DASException {
         DASRequest processed = new DASRequest();
         String pathInfo = raw.getPathInfo().replaceAll("^/", "");
         String[] parts = pathInfo.split("/");
         if (parts.length == 1) {
-            processed.setCommand(parts[0]);
+            if (COMMANDS.contains(parts[0])) {
+                processed.setCommand(parts[0]);
+            } else {
+                processed.setCommand("sources");
+                processed.setDataSource(parts[0]);
+            }
         } else if (parts.length == 2) {
             processed.setDataSource(parts[0]);
             processed.setCommand(parts[1]);

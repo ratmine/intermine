@@ -1,4 +1,4 @@
-package org.intermine.webservice.server;
+package org.intermine.api.profile;
 
 /*
  * Copyright (C) 2002-2013 FlyMine
@@ -13,12 +13,8 @@ package org.intermine.webservice.server;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.intermine.api.profile.InterMineBag;
-import org.intermine.api.profile.InvalidBag;
-import org.intermine.api.profile.Profile;
-import org.intermine.api.profile.SavedQuery;
 import org.intermine.api.template.ApiTemplate;
-import org.intermine.web.util.DevNullMap;
+import org.intermine.api.util.DevNullMap;
 
 /**
  * A null-object for profiles for use with the web services.
@@ -28,7 +24,7 @@ import org.intermine.web.util.DevNullMap;
  * @author Alex Kalderimis
  *
  */
-final class AnonProfile extends Profile
+public final class AnonProfile extends Profile
 {
     /**
      * Constructor

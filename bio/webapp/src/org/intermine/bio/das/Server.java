@@ -10,7 +10,8 @@ import javax.xml.stream.XMLStreamException;
 
 import org.apache.log4j.Logger;
 import org.intermine.api.InterMineAPI;
-import org.intermine.bio.das.command.Sources;
+import org.intermine.bio.das.command.SequenceCommand;
+import org.intermine.bio.das.command.SourcesCommand;
 import org.intermine.web.context.InterMineContext;
 
 /**
@@ -26,7 +27,6 @@ public class Server extends HttpServlet
 
     protected InterMineAPI api;
 
-
     private RequestParser requestParser = new RequestParser();
 
     @Override
@@ -36,22 +36,26 @@ public class Server extends HttpServlet
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) {
+        LOG.info("Responding to " + request.getPathInfo());
         try {
             OutputStream out = response.getOutputStream();
             DASRequest input = requestParser.parse(request);
+            Command command = null;
             if ("sources".equals(input.getCommand())) {
-                Sources command = new Sources(input);
-                command.serve(out);
+                command = new SourcesCommand(input);
+            } else if ("sequence".equals(input.getCommand())) {
+                command = new SequenceCommand(input);
             }
+            command.loadData(api);
+            command.serve(out);
         } catch (DASException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            LOG.error("DASException", e);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            LOG.error("IOE", e);
         } catch (XMLStreamException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            LOG.error("XSE", e);
+        } catch (DataLoadingException e) {
+            LOG.error("DLE", e);
         }
     }
 

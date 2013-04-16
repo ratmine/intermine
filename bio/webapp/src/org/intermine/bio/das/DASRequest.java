@@ -1,17 +1,22 @@
 package org.intermine.bio.das;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map.Entry;
-import java.util.Map;
 import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
-public class DASRequest extends AbstractMap<String, String>
+import org.intermine.bio.das.util.MultiGet;
+
+public class DASRequest
+    extends AbstractMap<String, String>
+    implements MultiGet<String, String>
 {
     private String dataSource, command;
-    private Set<Entry<String, String>> arguments = new HashSet<Entry<String, String>>();
+    private Collection<Entry<String, String>> arguments =
+            new ArrayList<Entry<String, String>>();
 
     DASRequest() {
         // default scope constructor.
@@ -44,7 +49,21 @@ public class DASRequest extends AbstractMap<String, String>
     }
 
     void addArgument(String name, String value) {
-        arguments.add(new AbstractMap.SimpleImmutableEntry(name, value));
+        arguments.add(new SimpleImmutableEntry(name, value));
+    }
+
+    @Override
+    public Collection<String> getAll(String key) {
+        Set<String> ret = new LinkedHashSet<String>();
+        if (key != null) {
+            for (Entry<String, String> pair: arguments) {
+                if (key.equals(pair.getKey())) {
+                    ret.add(pair.getValue());
+                }
+            }
+        }
+
+        return ret;
     }
 
 }

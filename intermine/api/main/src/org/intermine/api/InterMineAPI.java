@@ -18,6 +18,7 @@ import org.intermine.api.bag.BagManager;
 import org.intermine.api.bag.BagQueryConfig;
 import org.intermine.api.bag.BagQueryRunner;
 import org.intermine.api.mines.FriendlyMineManager;
+import org.intermine.api.profile.AnonProfile;
 import org.intermine.api.profile.Profile;
 import org.intermine.api.profile.ProfileManager;
 import org.intermine.api.profile.TagManager;
@@ -180,6 +181,12 @@ public class InterMineAPI
             }
             return retval;
         }
+    }
+
+    private Profile anonProfile = new AnonProfile();
+
+    public PathQueryExecutor getPathQueryExecutor() {
+        return getPathQueryExecutor(anonProfile);
     }
 
     /**

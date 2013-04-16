@@ -11,11 +11,14 @@ public class Source
 
     private List<Version> versions = new ArrayList<Version>();
     
-    public Source(String uri, String title, String docHref, String desc, Collection<Version> versions) {
+    public Source(
+            String uri, String title, String docHref, String desc, String maintainer,
+            Collection<Version> versions) {
         this.uri = uri;
         this.title = title;
         this.docHref = docHref;
         this.description = desc;
+        this.maintainer = maintainer;
         this.versions.addAll(versions);
     }
 
