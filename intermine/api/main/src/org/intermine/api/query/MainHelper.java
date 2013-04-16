@@ -1369,7 +1369,12 @@ public final class MainHelper
 
         return q;
     }
-    
+
+    /**
+     * This should be called by whatever process initialises the main
+     * application. It should not need to be called more than once.
+     * @param props
+     */
     public static void loadHelpers(Properties props) {
         RangeConfig.loadHelpers(props);
     }
