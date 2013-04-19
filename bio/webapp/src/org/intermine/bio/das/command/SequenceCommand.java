@@ -3,7 +3,9 @@ package org.intermine.bio.das.command;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
@@ -11,6 +13,7 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
+import org.apache.commons.lang.StringUtils;
 import org.intermine.api.InterMineAPI;
 import org.intermine.api.query.PathQueryExecutor;
 import org.intermine.api.results.ExportResultsIterator;
@@ -25,6 +28,7 @@ import org.intermine.objectstore.ObjectStoreException;
 import org.intermine.objectstore.query.ConstraintOp;
 import org.intermine.objectstore.query.Query;
 import org.intermine.pathquery.Constraints;
+import org.intermine.pathquery.PathConstraintMultitype;
 import org.intermine.pathquery.PathConstraintRange;
 import org.intermine.pathquery.PathQuery;
 import org.jfree.util.Log;
@@ -32,7 +36,7 @@ import org.jfree.util.Log;
 public class SequenceCommand implements Command {
 
     private Collection<String> segments = new HashSet<String>();
-    private String dataSource;
+    private String organism, featureType;
     private Collection<Sequence> sequences = new ArrayList<Sequence>();
 
     SequenceCommand() {
@@ -41,7 +45,8 @@ public class SequenceCommand implements Command {
 
     public SequenceCommand(DASRequest arguments) {
         this.segments.addAll(arguments.getAll("segment"));
-        this.dataSource = arguments.getDataSource();
+        this.organism = arguments.getDataSource().getOrganism();
+        this.featureType = arguments.getDataSource().getFeatureType();
     }
 
     public void loadData(InterMineAPI api) throws DataLoadingException {
@@ -78,12 +83,9 @@ public class SequenceCommand implements Command {
                new ArrayList<String>(segments)
            )
         );
-        pq.addConstraint(
-            Constraints.eq(
-                "SequenceFeature.organism.name",
-                dataSource.replaceAll("_", " ")
-            )
-        );
+        pq.addConstraint(Constraints.eq("SequenceFeature.organism.name", organism));
+        pq.addConstraint(new PathConstraintMultitype("SequenceFeature",
+                ConstraintOp.ISA, Collections.singleton(featureType)));
         Log.info("Query: " + pq.toXml());
         return pq;
     }

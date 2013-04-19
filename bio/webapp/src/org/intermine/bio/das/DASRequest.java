@@ -8,13 +8,35 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.intermine.bio.das.util.MultiGet;
 
 public class DASRequest
     extends AbstractMap<String, String>
     implements MultiGet<String, String>
 {
-    private String dataSource, command;
+    public class DataSource {
+
+        private String organism, featureType;
+
+        public DataSource(String src) {
+            String[] parts = StringUtils.defaultIfBlank(src, "").split("-");
+            organism = parts[0].replaceAll("_", " ");
+            featureType = parts[1];
+        }
+
+        public String getOrganism() {
+            return organism;
+        }
+
+        public String getFeatureType() {
+            return featureType;
+        }
+
+    }
+
+    private String command;
+    private DataSource dataSource;
     private Collection<Entry<String, String>> arguments =
             new ArrayList<Entry<String, String>>();
 
@@ -28,7 +50,7 @@ public class DASRequest
         }
     }
 
-    public String getDataSource() {
+    public DataSource getDataSource() {
         return dataSource;
     }
 
@@ -45,7 +67,7 @@ public class DASRequest
     }
 
     void setDataSource(String src) {
-        this.dataSource = src;
+        this.dataSource = new DataSource(src);
     }
 
     void addArgument(String name, String value) {
