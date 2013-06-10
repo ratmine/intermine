@@ -5,6 +5,8 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import org.apache.commons.lang.StringUtils;
+
 import org.intermine.metadata.Model;
 
 /**
@@ -24,7 +26,7 @@ public class Issue340Test {
             "Employee.department.name",
             "Employee.address.address",
             "Employee.departmentThatRejectedMe.name",
-            "Employee.employmentPeriod"
+            "Employee.employmentPeriod.startDate"
         );
         query.setOuterJoinStatus("Employee.department", OuterJoinStatus.OUTER);
         query.setOuterJoinStatus("Employee.address", OuterJoinStatus.OUTER);
@@ -35,7 +37,7 @@ public class Issue340Test {
 
     @Test
     public void isValid() {
-        assertTrue(query.isValid());
+        assertTrue(StringUtils.join(query.verifyQuery(), ","), query.isValid());
     }
 }
 
