@@ -192,6 +192,9 @@ productionLog
 
 # mines
 malariamine/
+ratmine/
+bio/ratmine_bio_sources/
+bio/ratmine_bio_sources_old/
 
 # IDEs
 nbproject/
