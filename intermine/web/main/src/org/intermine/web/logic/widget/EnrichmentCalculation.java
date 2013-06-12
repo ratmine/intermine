@@ -1,7 +1,7 @@
 package org.intermine.web.logic.widget;
 
 /*
- * Copyright (C) 2002-2012 FlyMine
+ * Copyright (C) 2002-2013 FlyMine
  *
  * This code may be freely distributed and modified under the
  * terms of the GNU Lesser General Public Licence.  This should
@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.math.distribution.HypergeometricDistributionImpl;
+import org.apache.commons.math3.distribution.HypergeometricDistribution;
 
 /**
  * Calculate enrichment of an attribute applied to members of a sample that is a subset of a larger
@@ -62,13 +62,11 @@ public final class EnrichmentCalculation
             String attribute = entry.getKey();
 
             Integer sampleCount = entry.getValue();
-            Integer populationCount = annotatedPopulationInfo.get(attribute).getSize();
-            if (populationCount == null) {
-                populationCount = 0;
-            }
+            PopulationInfo pi = annotatedPopulationInfo.get(attribute);
+            Integer populationCount = (pi != null) ? pi.getSize() : 0;
 
-            HypergeometricDistributionImpl h =
-                new HypergeometricDistributionImpl(populationSize, populationCount, sampleSize);
+            HypergeometricDistribution h =
+                new HypergeometricDistribution(populationSize, populationCount, sampleSize);
             Double pValue = h.upperCumulativeProbability(sampleCount);
             rawResults.put(attribute, new BigDecimal(pValue));
         }

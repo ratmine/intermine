@@ -1,7 +1,7 @@
 package org.intermine.bio.dataconversion;
 
 /*
- * Copyright (C) 2002-2012 FlyMine
+ * Copyright (C) 2002-2013 FlyMine
  *
  * This code may be freely distributed and modified under the
  * terms of the GNU Lesser General Public Licence.  This should
@@ -73,11 +73,11 @@ public class RgdIdentifiersResolverFactory extends IdResolverFactory
         }
 
         try {
-            boolean isCachedIdResolverRestored = restoreFromFile(this.clsCol);
+            boolean isCachedIdResolverRestored = restoreFromFile();
             if (!isCachedIdResolverRestored || (isCachedIdResolverRestored
                     && !resolver.hasTaxonAndClassName(taxonId, this.clsCol.iterator().next()))) {
                 String resolverFileRoot =
-                        PropertiesUtil.getProperties().getProperty(propKey).trim();
+                        PropertiesUtil.getProperties().getProperty(propKey);
 
                 if (StringUtils.isBlank(resolverFileRoot)) {
                     String message = "Resolver data file root path is not specified";
@@ -86,10 +86,10 @@ public class RgdIdentifiersResolverFactory extends IdResolverFactory
                 }
 
                 LOG.info("Creating id resolver from data file and caching it.");
-                String resolverFileName = resolverFileRoot + resolverFileSymbo;
+                String resolverFileName = resolverFileRoot.trim() + resolverFileSymbo;
                 File f = new File(resolverFileName);
                 if (f.exists()) {
-                    createFromFile(new BufferedReader(new FileReader(f)));
+                    createFromFile(f);
                     resolver.writeToFile(new File(ID_RESOLVER_CACHED_FILE_NAME));
                 } else {
                     LOG.warn("Resolver file not exists: " + resolverFileName);
@@ -100,8 +100,9 @@ public class RgdIdentifiersResolverFactory extends IdResolverFactory
         }
     }
 
-    private void createFromFile(BufferedReader reader) throws IOException {
-        Iterator<?> lineIter = FormattedTextParser.parseTabDelimitedReader(reader);
+    protected void createFromFile(File f) throws IOException {
+        Iterator<?> lineIter = FormattedTextParser.
+                parseTabDelimitedReader(new BufferedReader(new FileReader(f)));
         while (lineIter.hasNext()) {
             String[] line = (String[]) lineIter.next();
 

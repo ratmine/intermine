@@ -1,7 +1,7 @@
 package org.intermine.web.logic;
 
 /*
- * Copyright (C) 2002-2012 FlyMine
+ * Copyright (C) 2002-2013 FlyMine
  *
  * This code may be freely distributed and modified under the
  * terms of the GNU Lesser General Public Licence.  This should
@@ -199,7 +199,7 @@ public final class Constants
      * 
      * 12 - Added ability to filter lists from AvailableListsService
      */
-    public static final int WEB_SERVICE_VERSION = 12;
+    public static final int WEB_SERVICE_VERSION = 13;
 
     /**
      * Key for a Map from class name to Boolean.TRUE for all classes in the model that do not have

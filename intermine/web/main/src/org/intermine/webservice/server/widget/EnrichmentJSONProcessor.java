@@ -1,7 +1,7 @@
 package org.intermine.webservice.server.widget;
 
 /*
- * Copyright (C) 2002-2012 FlyMine
+ * Copyright (C) 2002-2013 FlyMine
  *
  * This code may be freely distributed and modified under the
  * terms of the GNU Lesser General Public Licence.  This should
@@ -52,11 +52,11 @@ public class EnrichmentJSONProcessor implements WidgetResultProcessor {
      * @return
      * @throws JSONException
      */
-    public String formatExtraAttributes(Map<String, Map<String, String>> extraAttributes)
+    public String formatExtraAttributes(Map<String, Map<String, Object>> extraAttributes)
         throws JSONException {
         JSONObject jsonExtraAttributes = new JSONObject();
         for (String extraAttributeKey : extraAttributes.keySet()) {
-            Map<String, String> kvpairs = extraAttributes.get(extraAttributeKey);
+            Map<String, Object> kvpairs = extraAttributes.get(extraAttributeKey);
             JSONObject jsonExtraAttribute = new JSONObject(kvpairs);
             jsonExtraAttributes.put(extraAttributeKey, jsonExtraAttribute);
         }

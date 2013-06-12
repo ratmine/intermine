@@ -1,7 +1,7 @@
 package org.intermine.webservice.server.query;
 
 /*
- * Copyright (C) 2002-2012 FlyMine
+ * Copyright (C) 2002-2013 FlyMine
  *
  * This code may be freely distributed and modified under the
  * terms of the GNU Lesser General Public Licence.  This should
@@ -62,7 +62,7 @@ public class CodeService extends AbstractQueryService
 
     @Override
     protected boolean canServe(Format format) {
-        switch (getFormat()) {
+        switch (format) {
         case JSON:
             return true;
         case TEXT:
@@ -182,7 +182,7 @@ public class CodeService extends AbstractQueryService
     }
 
     private PathQuery getPathQuery() {
-        String xml = QueryRequestParser.getQueryXml(request);
+        String xml = new QueryRequestParser(im.getQueryStore(), request).getQueryXml();
         PathQueryBuilder pqb = getQueryBuilder(xml);
         PathQuery query = pqb.getQuery();
         return query;

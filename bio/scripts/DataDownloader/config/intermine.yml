@@ -17,13 +17,17 @@ default_sources:
   - "MGIIdentifiers"
   - "NCBIGene"
   - "Panther"
-  - "PDB"
   - "PubMed"
   - "Reactome"
   - "RedFly"
   - "RGDIdentifiers"
   - "UniProt"
   - "WormIdentifiers"
+  - "HomoloGene"
+  - "OrthoDB"
+  - "SGDIdentifiers"
+  - "ZFINIdentifiers"
+  - "MousePheno"
 
 UniProt:
     organisms:

@@ -1,7 +1,7 @@
 package org.intermine.bio.dataconversion;
 
 /*
- * Copyright (C) 2002-2012 FlyMine
+ * Copyright (C) 2002-2013 FlyMine
  *
  * This code may be freely distributed and modified under the
  * terms of the GNU Lesser General Public Licence.  This should
@@ -23,6 +23,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.intermine.util.FormattedTextParser;
 import org.intermine.util.PropertiesUtil;
+import org.intermine.util.StringUtil;
 
 /**
  * ID resolver for MGI genes.
@@ -74,11 +75,11 @@ public class MgiIdentifiersResolverFactory extends IdResolverFactory
         }
 
         try {
-            boolean isCachedIdResolverRestored = restoreFromFile(this.clsCol);
+            boolean isCachedIdResolverRestored = restoreFromFile();
             if (!isCachedIdResolverRestored || (isCachedIdResolverRestored
                     && !resolver.hasTaxonAndClassName(taxonId, this.clsCol.iterator().next()))) {
                 String resolverFileRoot =
-                        PropertiesUtil.getProperties().getProperty(propKey).trim();
+                        PropertiesUtil.getProperties().getProperty(propKey);
 
                 if (StringUtils.isBlank(resolverFileRoot)) {
                     String message = "Resolver data file root path is not specified";
@@ -87,10 +88,10 @@ public class MgiIdentifiersResolverFactory extends IdResolverFactory
                 }
 
                 LOG.info("Creating id resolver from data file and caching it.");
-                String resolverFileName = resolverFileRoot + resolverFileSymbo;
+                String resolverFileName = resolverFileRoot.trim() + resolverFileSymbo;
                 File f = new File(resolverFileName);
                 if (f.exists()) {
-                    createFromFile(new BufferedReader(new FileReader(f)));
+                    createFromFile(f);
                     resolver.writeToFile(new File(ID_RESOLVER_CACHED_FILE_NAME));
                 } else {
                     LOG.warn("Resolver file not exists: " + resolverFileName);
@@ -101,25 +102,21 @@ public class MgiIdentifiersResolverFactory extends IdResolverFactory
         }
     }
 
-    private void createFromFile(BufferedReader reader) throws IOException {
-        Iterator<?> lineIter = FormattedTextParser.parseTabDelimitedReader(reader);
+    protected void createFromFile(File f) throws IOException {
+        Iterator<?> lineIter = FormattedTextParser.
+                parseTabDelimitedReader(new BufferedReader(new FileReader(f)));
         while (lineIter.hasNext()) {
             String[] line = (String[]) lineIter.next();
 
-            if (line.length < 16) {
-                continue;
-            }
-
-            String type = line[1];
+            String type = line[9];
             if (!"Gene".equals(type)) {
                 continue;
             }
 
             String identifier = line[0];    // MGI
-            String symbol = line[2];
-            String name = line[3];
-            String entrez = line[10];
-            String ensembl = line[15];
+            String symbol = line[6];
+            String name = line[8];
+            String synonymsStr = line[11];
 
             if (StringUtils.isEmpty(identifier)) {
                 continue;
@@ -134,11 +131,10 @@ public class MgiIdentifiersResolverFactory extends IdResolverFactory
                 if (!NULL_STRING.equals(name)) {
                     resolver.addMainIds(taxonId, identifier, Collections.singleton(name));
                 }
-                if (!NULL_STRING.equals(entrez)) {
-                    resolver.addSynonyms(taxonId, identifier, Collections.singleton(entrez));
-                }
-                if (!NULL_STRING.equals(ensembl)) {
-                    resolver.addSynonyms(taxonId, identifier, Collections.singleton(ensembl));
+
+                if (synonymsStr != null && !synonymsStr.isEmpty()) {
+                    resolver.addSynonyms(taxonId, identifier,
+                            new HashSet<String>(Arrays.asList(StringUtil.split(synonymsStr, "|"))));
                 }
             }
         }

@@ -1,7 +1,7 @@
 package org.intermine.web.logic.widget;
 
 /*
- * Copyright (C) 2002-2012 FlyMine
+ * Copyright (C) 2002-2013 FlyMine
  *
  * This code may be freely distributed and modified under the
  * terms of the GNU Lesser General Public Licence.  This should
@@ -38,18 +38,11 @@ public interface CorrectionCoefficient
     boolean isSelected(String correctionCoefficientInput);
 
     /**
-     * Return the query field associated to the correction coefficient
+     * Update the query, given in input, with the field associated to the correction coefficient
+     * and return it 
      * @return the query field
      */
-    QueryField getQueryField(QueryClass qc);
-
-    /**
-     * Update total population query given in input using the queryfield specific for the correction
-     * @param q the total population query
-     * @param subQ the subquery used in the total population query
-     * @param qf the query field specific for the correction
-     */
-    void updatePopulationTotalQuery(Query q, Query subQ, QueryField qf);
+    QueryField updateQueryWithCorrectionCoefficient(Query query, QueryClass qc);
 
     /**
      * Update the annotated population query given in input using the queryfield
@@ -73,5 +66,5 @@ public interface CorrectionCoefficient
      * Return the key value pairs to put in the webservice result
      * @return true/false
      */
-    Map<String, Map<String, String>> getOutputInfo(String correctionCoefficientInput);
+    Map<String, Map<String, Object>> getOutputInfo(String correctionCoefficientInput);
 }

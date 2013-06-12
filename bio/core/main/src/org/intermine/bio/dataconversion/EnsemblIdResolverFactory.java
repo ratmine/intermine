@@ -1,7 +1,7 @@
 package org.intermine.bio.dataconversion;
 
 /*
- * Copyright (C) 2002-2012 FlyMine
+ * Copyright (C) 2002-2013 FlyMine
  *
  * This code may be freely distributed and modified under the
  * terms of the GNU Lesser General Public Licence.  This should
@@ -63,11 +63,11 @@ public class EnsemblIdResolverFactory extends IdResolverFactory
         }
 
         try {
-            boolean isCachedIdResolverRestored = restoreFromFile(this.clsCol);
+            boolean isCachedIdResolverRestored = restoreFromFile();
             if (!isCachedIdResolverRestored || (isCachedIdResolverRestored
                     && !resolver.hasTaxonAndClassName(taxonId, this.clsCol.iterator().next()))) {
                 String resolverFileRoot =
-                        PropertiesUtil.getProperties().getProperty(propKey).trim();
+                        PropertiesUtil.getProperties().getProperty(propKey);
 
                 if (StringUtils.isBlank(resolverFileRoot)) {
                     String message = "Resolver data file root path is not specified";
@@ -76,10 +76,10 @@ public class EnsemblIdResolverFactory extends IdResolverFactory
                 }
 
                 LOG.info("Creating id resolver from data file and caching it.");
-                String resolverFileName = resolverFileRoot + resolverFileSymbo;
+                String resolverFileName = resolverFileRoot.trim() + resolverFileSymbo;
                 File f = new File(resolverFileName);
                 if (f.exists()) {
-                    createFromFile(new BufferedReader(new FileReader(f)));
+                    createFromFile(f);
                     resolver.writeToFile(new File(ID_RESOLVER_CACHED_FILE_NAME));
                 } else {
                     LOG.warn("Resolver file not exists: " + resolverFileName);
@@ -90,12 +90,12 @@ public class EnsemblIdResolverFactory extends IdResolverFactory
         }
     }
 
-    private void createFromFile(BufferedReader reader) throws IOException {
+    protected void createFromFile(File f) throws IOException {
 
         Set<String> validChromosomes = validChromosomes();
 
         // Ensembl Id | chromosome name
-        Iterator<?> lineIter = FormattedTextParser.parseTabDelimitedReader(reader);
+        Iterator<?> lineIter = FormattedTextParser.parseTabDelimitedReader(new BufferedReader(new FileReader(f)));
         while (lineIter.hasNext()) {
             String[] line = (String[]) lineIter.next();
             String ensembl = line[0];
@@ -106,7 +106,7 @@ public class EnsemblIdResolverFactory extends IdResolverFactory
         }
     }
 
-    private Set<String> validChromosomes() {
+    protected Set<String> validChromosomes() {
         Set<String> chrs = new HashSet<String>();
         for (int i = 1; i <= 22; i++) {
             chrs.add("" + i);

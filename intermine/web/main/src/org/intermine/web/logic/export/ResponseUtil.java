@@ -1,7 +1,7 @@
 package org.intermine.web.logic.export;
 
 /*
- * Copyright (C) 2002-2012 FlyMine
+ * Copyright (C) 2002-2013 FlyMine
  *
  * This code may be freely distributed and modified under the
  * terms of the GNU Lesser General Public Licence.  This should
@@ -236,7 +236,7 @@ public final class ResponseUtil
      * @param fileName the name of the downloaded file
      */
     public static void setFileName(HttpServletResponse response, String fileName) {
-        response.setHeader("Content-Disposition", "inline; filename=\"" + fileName + "\"");
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
     }
 
     /**

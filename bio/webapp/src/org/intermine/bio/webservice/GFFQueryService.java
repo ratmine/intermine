@@ -1,7 +1,7 @@
 package org.intermine.bio.webservice;
 
 /*
- * Copyright (C) 2002-2012 FlyMine
+ * Copyright (C) 2002-2013 FlyMine
  *
  * This code may be freely distributed and modified under the
  * terms of the GNU Lesser General Public Licence.  This should
@@ -60,7 +60,7 @@ public class GFFQueryService extends BioQueryService
         removeFirstItemInPaths(viewColumns);
         return new GFF3Exporter(
             getPrintWriter(), indexes, getSoClassNames(),
-            viewColumns, sourceName, organisms, false);
+            viewColumns, sourceName, organisms, false, getQueryPaths(pq));
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })

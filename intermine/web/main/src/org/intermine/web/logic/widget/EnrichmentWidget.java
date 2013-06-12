@@ -1,7 +1,7 @@
 package org.intermine.web.logic.widget;
 
 /*
- * Copyright (C) 2002-2012 FlyMine
+ * Copyright (C) 2002-2013 FlyMine
  *
  * This code may be freely distributed and modified under the
  * terms of the GNU Lesser General Public Licence.  This should
@@ -122,7 +122,7 @@ public class EnrichmentWidget extends Widget
         }
         throw new IllegalArgumentException(
             String.format("The %s enrichment query only accepts lists of %s, but you provided a "
-                + "list of %s " + config.getId(), config.getTypeClass(), bag.getType()));
+                + "list of %s ", config.getId(), config.getTypeClass(), bag.getType()));
     }
 
     /**

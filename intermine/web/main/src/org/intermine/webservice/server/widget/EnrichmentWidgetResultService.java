@@ -1,7 +1,7 @@
 package org.intermine.webservice.server.widget;
 
 /*
- * Copyright (C) 2002-2012 FlyMine
+ * Copyright (C) 2002-2013 FlyMine
  *
  * This code may be freely distributed and modified under the
  * terms of the GNU Lesser General Public Licence.  This should
@@ -74,7 +74,6 @@ public class EnrichmentWidgetResultService extends WidgetService
      *
      * @throws Exception an error has occurred
      */
-    @SuppressWarnings("deprecation")
     @Override
     protected void execute() throws Exception {
         WidgetsServiceInput input = getInput();
@@ -101,9 +100,20 @@ public class EnrichmentWidgetResultService extends WidgetService
         }
         addOutputFilter(widgetConfig, filterSelectedValue, imBag);
 
+        addOutputUserLogged();
+
         //reference population
         InterMineBag populationBag = getReferencePopulationBag(input);
-        addOutputUserLogged();
+        if (populationBag != null && !verifyPopulationContainsBag(imBag, populationBag)) {
+            if (input.isSavePopulation()) {
+                deleteReferencePopulationPreference(input);
+            }
+            addOutputAttribute("message", "One or more of the " + imBag.getType() + "s in this list"
+                + " are currently not included in your background population. The background "
+                + "population should include all " + imBag.getType() + "s that were tested as part of "
+                + "your experiment.");
+            return;
+        }
 
         //instantiate the widget
         EnrichmentWidget widget = null;
@@ -156,7 +166,7 @@ public class EnrichmentWidgetResultService extends WidgetService
         WidgetResultProcessor processor = getProcessor();
         String extra = input.getExtraAttributes().get(3);
         CorrectionCoefficient cc = widget.getExtraCorrectionCoefficient();
-        Map<String, Map<String, String>> extraAttributes;
+        Map<String, Map<String, Object>> extraAttributes;
         if (cc != null) {
             extraAttributes = cc.getOutputInfo(extra);
             if (processor instanceof EnrichmentJSONProcessor) {
@@ -271,5 +281,17 @@ public class EnrichmentWidgetResultService extends WidgetService
             }
         }
         return "";
+    }
+
+    private boolean verifyPopulationContainsBag(InterMineBag bag, InterMineBag populationBag) {
+        //verify the population Bag contains all elements of imBag
+        List<Integer> populationBagContentdIds =
+            new ArrayList<Integer>(populationBag.getContentsAsIds());
+        List<Integer> bagContentdIds =
+            new ArrayList<Integer>(bag.getContentsAsIds());
+        if (populationBagContentdIds.containsAll(bagContentdIds)) {
+            return true;
+        }
+        return false;
     }
 }

@@ -1,7 +1,7 @@
 package org.intermine.api.profile;
 
 /*
- * Copyright (C) 2002-2012 FlyMine
+ * Copyright (C) 2002-2013 FlyMine
  *
  * This code may be freely distributed and modified under the
  * terms of the GNU Lesser General Public Licence.  This should
@@ -894,5 +894,20 @@ public class InterMineBag extends StorableBag implements WebSearchable, Cloneabl
             }
         }
         return 0;
+    }
+
+    @Override
+    public String toString() {
+        StringBuffer sb = new StringBuffer(getClass().getName()).append('(');
+        sb.append(" name = \"").append(this.name).append('"');
+        sb.append(" type = ").append(this.getType());
+        sb.append(" createdAt = \"").append(this.getDateCreated()).append('"');
+        if (StringUtils.isNotBlank(description)) {
+            sb.append(" description = \"").append(this.description).append('"');
+        }
+        sb.append(" bagID = ").append(this.getOsb().getBagId());
+        sb.append(" profileID = ").append(this.getProfileId());
+        sb.append(" )");
+        return sb.toString();
     }
 }

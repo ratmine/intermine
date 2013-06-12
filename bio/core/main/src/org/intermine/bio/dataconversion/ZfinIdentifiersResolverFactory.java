@@ -1,7 +1,7 @@
 package org.intermine.bio.dataconversion;
 
 /*
- * Copyright (C) 2002-2012 FlyMine
+ * Copyright (C) 2002-2013 FlyMine
  *
  * This code may be freely distributed and modified under the
  * terms of the GNU Lesser General Public Licence.  This should
@@ -35,7 +35,7 @@ public class ZfinIdentifiersResolverFactory extends IdResolverFactory
     protected static final Logger LOG = Logger.getLogger(ZfinIdentifiersResolverFactory.class);
 
     // data file path set in ~/.intermine/MINE.properties
-    // e.g. resolver.zfin.file=/micklem/data/zfin-identifiers/current/ensembl_1_to_1.txt
+    // e.g. resolver.zfin.file=/micklem/data/zfin-identifiers/current/identifiersForIntermine.txt
     private final String propKey = "resolver.file.rootpath";
     private final String resolverFileSymbo = "zfin";
     private final String taxonId = "7955";
@@ -79,11 +79,11 @@ public class ZfinIdentifiersResolverFactory extends IdResolverFactory
         }
 
         try {
-            boolean isCachedIdResolverRestored = restoreFromFile(this.clsCol);
+            boolean isCachedIdResolverRestored = restoreFromFile();
             if (!isCachedIdResolverRestored || (isCachedIdResolverRestored
                     && !resolver.hasTaxonAndClassName(taxonId, this.clsCol.iterator().next()))) {
                 String resolverFileRoot =
-                        PropertiesUtil.getProperties().getProperty(propKey).trim();
+                        PropertiesUtil.getProperties().getProperty(propKey);
 
                 if (StringUtils.isBlank(resolverFileRoot)) {
                     String message = "Resolver data file root path is not specified";
@@ -92,10 +92,10 @@ public class ZfinIdentifiersResolverFactory extends IdResolverFactory
                 }
 
                 LOG.info("Creating id resolver from data file and caching it.");
-                String resolverFileName = resolverFileRoot + resolverFileSymbo;
+                String resolverFileName = resolverFileRoot.trim() + resolverFileSymbo;
                 File f = new File(resolverFileName);
                 if (f.exists()) {
-                    createFromFile(new BufferedReader(new FileReader(f)));
+                    createFromFile(f);
                     resolver.writeToFile(new File(ID_RESOLVER_CACHED_FILE_NAME));
                 } else {
                     LOG.warn("Resolver file not exists: " + resolverFileName);
@@ -106,10 +106,11 @@ public class ZfinIdentifiersResolverFactory extends IdResolverFactory
         }
     }
 
-    private void createFromFile(BufferedReader reader) throws IOException {
+    protected void createFromFile(File f) throws IOException {
         // data is in format:
-        // ZDBID	ID1|ID2
-        Iterator<?> lineIter = FormattedTextParser.parseTabDelimitedReader(reader);
+        // ZDBID	ID1,ID2,ID3
+        Iterator<?> lineIter = FormattedTextParser.
+                parseTabDelimitedReader(new BufferedReader(new FileReader(f)));
         while (lineIter.hasNext()) {
             String[] line = (String[]) lineIter.next();
 
@@ -118,7 +119,7 @@ public class ZfinIdentifiersResolverFactory extends IdResolverFactory
             }
 
             String zfinId = line[0];
-            String[] synonyms = StringUtil.split(line[1], "\\|");
+            String[] synonyms = StringUtil.split(line[1].trim(), ",");
 
             resolver.addMainIds(taxonId, zfinId, Collections.singleton(zfinId));
             resolver.addSynonyms(taxonId, zfinId, new HashSet<String>(Arrays.asList(synonyms)));

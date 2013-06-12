@@ -1,7 +1,7 @@
 package org.intermine.api.profile;
 
 /*
- * Copyright (C) 2002-2012 FlyMine
+ * Copyright (C) 2002-2013 FlyMine
  *
  * This code may be freely distributed and modified under the
  * terms of the GNU Lesser General Public Licence.  This should
@@ -646,6 +646,8 @@ public class Profile
         if (isLoggedIn()) {
             getSharedBagManager().unshareBagWithAllUsers(bagToDelete);
             bagToDelete.delete();
+        } else { //refresh the search repository
+            ((StorableBag) bagToDelete).delete();
         }
 
         TagManager tagManager = getTagManager();

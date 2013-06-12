@@ -1,7 +1,7 @@
 package org.intermine.webservice.server.output;
 
 /*
- * Copyright (C) 2002-2012 FlyMine
+ * Copyright (C) 2002-2013 FlyMine
  *
  * This code may be freely distributed and modified under the
  * terms of the GNU Lesser General Public Licence.  This should
@@ -59,6 +59,17 @@ public abstract class Output
      * Resource not found http status code.
      */
     public static final int SC_NOT_FOUND = 404;
+
+    /**
+     * Request is legal, but requires authentication, which was
+     * either not provided, or failed.
+     */
+    public static final int SC_UNAUTHORIZED = 401;
+
+    /**
+     * Request will only accept content in a format we cannot provide.
+     */
+    public static final int NOT_ACCEPTABLE = 406;
 
     /**
      * Sets the error message
