@@ -6,12 +6,12 @@
   <property name="default.intermine.properties.file" location="../default.intermine.integrate.properties" />
 
   <sources>
-    <source name="ensembl-hgnc" type="ensembl-hgnc">
-      <property name="src.data.dir" location="/micklem/data/ensembl-ids/current" />
-    </source>
     <source name="ncbi-gene" type="ncbi-gene">
       <property name="src.data.dir" location="/micklem/data/ncbi/current/" />
       <property name="organisms" value="9606" />
+    </source>
+    <source name="ensembl-hgnc" type="ensembl-hgnc">
+      <property name="src.data.dir" location="/micklem/data/ensembl-ids/current" />
     </source>
     <source name="ncbi-summaries" type="ncbi-summaries">
       <property name="src.data.dir" location="/micklem/data/metabolic/gene-summaries/current/" />
@@ -86,6 +86,9 @@
       <property name="src.data.dir" location="/micklem/data/go-annotation/metabolic" />
       <property name="src.data.includes" value="**/gene_association*" />
     </source>
+    <source name="hpo" type="hpo">
+      <property name="src.data.file" location="/micklem/data/hpo/hp.obo" />
+    </source>
     <source name="psi-intact" type="psi" dump="true">
       <property name="src.data.dir" location="/micklem/data/psi/intact/current" />
       <property name="intact.organisms" value="9606 10090" />
@@ -103,7 +106,7 @@
     <source name="omim" type="omim">
       <property name="src.data.dir" location="/micklem/data/metabolic/omim/current" />
     </source>
-    <source name="ensembl-mouse" type="ensembl" dump="true">
+    <source name="ensembl-mouse" type="ensembl-core" dump="true">
       <property name="src.data.dir" location="/micklem/data/ensembl/mus_musculus/current_core" />
       <property name="src.data.dir.includes" value="10090.xml" />
     </source>
