@@ -20,7 +20,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
-
+import org.apache.commons.lang.StringUtils;
 import org.intermine.util.StringUtil;
 import org.intermine.util.XmlUtil;
 
@@ -146,7 +146,8 @@ public class GFF3Record
 
     private void parseAttribute(String argAttributeString, String line) throws IOException {
         String attributeString = argAttributeString;
-        StringTokenizer sTok = new StringTokenizer(attributeString, ";", false);
+        attributeString = StringUtils.replaceEach(attributeString, new String[] { "&amp;", "&quot;", "&lt;", "&gt;" }, new String[] { "&", "\"", "<", ">" });
+	StringTokenizer sTok = new StringTokenizer(attributeString, ";", false);
 
         while (sTok.hasMoreTokens()) {
             String attVal = sTok.nextToken().trim();

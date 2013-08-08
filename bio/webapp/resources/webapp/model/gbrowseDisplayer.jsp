@@ -15,9 +15,9 @@
 
   <c:set var="type" value="${className}s"/>
 
-  <c:if test="${className == 'MRNA' || className == 'Transcript'
+  <c:if test="${className == 'MRNA' || className == 'Gene' || className == 'Transcript'
               || className == 'Pseudogene'}">
-    <c:set var="type" value="Genes"/>
+    <c:set var="type" value="ARGD_curated_genes"/>
   </c:if>
 
   <c:set var="label" value="${type}"/>
