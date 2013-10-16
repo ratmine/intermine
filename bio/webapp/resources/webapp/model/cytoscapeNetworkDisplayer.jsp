@@ -86,7 +86,7 @@
         </fieldset>
 
         <fieldset class="alt">
-          <label>View interaction data in a table</lable>
+          <label>View interaction data in a table</label>
           <input type="button" id="toggleTable" value="Toggle">
         </fieldset>
       </div>

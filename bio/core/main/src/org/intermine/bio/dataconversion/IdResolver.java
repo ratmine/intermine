@@ -74,7 +74,9 @@ public class IdResolver
     // check that the given taxon id has some data for it
     // if an exception thrown, there must be something wrong with resolver factory.
     protected void checkTaxonId(String taxonId, String clsName) {
-        if (!orgIdMaps.containsKey(new MultiKey(taxonId, clsName))) {
+        LOG.info("in Id resolver .. this is the taxonId"+taxonId);
+
+	if (!orgIdMaps.containsKey(new MultiKey(taxonId, clsName))) {
             throw new IllegalArgumentException(clsName + " IdResolver has "
                                                + "no data for taxonId: "
                                                + taxonId + ".");
@@ -113,19 +115,28 @@ public class IdResolver
      * @return a set of matching primary identifiers
      */
     public Set<String> resolveId(String taxonId, String clsName, String id) {
-        checkTaxonId(taxonId,clsName);
+
+        LOG.info("inside resolveid with taxonid:"+taxonId);
+
+	checkTaxonId(taxonId,clsName);
         // if this is a primary identifier, just return it
+	LOG.info("inside resolveId, here is the id:" + id + " " +Collections.singleton(id));
         if (isPrimaryIdentifier(taxonId, clsName, id)) {
+		LOG.info("id is prmaryId:"+id);
             return Collections.singleton(id);
         }
         if (orgMainMaps.containsKey(new MultiKey(taxonId, clsName))
             && orgMainMaps.get(new MultiKey(taxonId, clsName)).containsKey(id)) {
+		LOG.info("orgMainMaps contains key:"+orgMainMaps.get(new MultiKey(taxonId, clsName)).get(id));
             return orgMainMaps.get(new MultiKey(taxonId, clsName)).get(id);
         }
         if (orgSynMaps.containsKey(new MultiKey(taxonId, clsName))
             && orgSynMaps.get(new MultiKey(taxonId, clsName)).containsKey(id)) {
+		LOG.info("orgSynMaps contains key:"+orgSynMaps.get(new MultiKey(taxonId, clsName)).get(id));
             return orgSynMaps.get(new MultiKey(taxonId, clsName)).get(id);
         }
+
+	LOG.info("returns collections.emptySet() for this Id:" + id);
         return Collections.emptySet();
     }
 
@@ -213,8 +224,10 @@ public class IdResolver
      * @return a count of the resolutions for this identifier
      */
     public int countResolutions(String taxonId, String clsName, String id) {
-        checkTaxonId(taxonId, clsName);
+        LOG.info("inside Count resolutions with taxonId:"+taxonId+" and id:"+id+" and classname:"+clsName);
+	checkTaxonId(taxonId, clsName);
         Set<String> resolvedIds = resolveId(taxonId, clsName, id);
+	LOG.info("resolveids size is:"+resolvedIds.size());
         return resolvedIds == null ? 0 : resolvedIds.size();
     }
 
@@ -439,10 +452,13 @@ public class IdResolver
     */
     protected void addEntry(String taxonId, String clsName, String primaryIdentifier,
             Collection<String> ids, Boolean mainId) {
+	//LOG.info("adding entry here:"+taxonId+" "+clsName+" "+primaryIdentifier);
         Map<String, Set<String>> idMap = orgIdMaps.get(new MultiKey(taxonId, clsName));
         if (idMap == null) {
             idMap = new LinkedHashMap<String, Set<String>>();
+		
             orgIdMaps.put(new MultiKey(taxonId, clsName), idMap);
+		LOG.info("idMap size is:"+idMap.size());
         }
 
         addToMapList(idMap, primaryIdentifier, ids);
@@ -454,6 +470,7 @@ public class IdResolver
             if (lookupMap == null) {
                 lookupMap = new HashMap<String, Set<String>>();
                 orgMainMaps.put(new MultiKey(taxonId, clsName), lookupMap);
+		LOG.info("inside orgMainMaps.put method:"+lookupMap.size());
             }
 
             reverseMap = orgIdMainMaps.get(new MultiKey(taxonId, clsName));
@@ -467,6 +484,7 @@ public class IdResolver
             if (lookupMap == null) {
                 lookupMap = new LinkedHashMap<String, Set<String>>();
                 orgSynMaps.put(new MultiKey(taxonId, clsName), lookupMap);
+		LOG.info("inside orgSynMaps.put method:"+lookupMap.size());
             }
 
             reverseMap = orgIdSynMaps.get(new MultiKey(taxonId, clsName));
@@ -481,6 +499,7 @@ public class IdResolver
 
         for (String id : ids) {
             addToMapList(lookupMap, id, Collections.singleton(primaryIdentifier));
+		//LOG.info("added to lookupMaps:"+primaryIdentifier);
         }
     }
 

@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!-- This file details any extensions needed to the data model to store data from this source, everything else is automatically generated from the model description so this is all we need to do to add to the model. -->
+
+<classes>
+<!-- add any <class> elements here -->
+
+
+	<class name="Gene" is-interface="true">
+                <attribute name="description" type="java.lang.String" />
+                <!--<attribute name="geneType" type="java.lang.String" />-->
+                <attribute name="ensemblIdentifier" type="java.lang.String" />
+                <!--<attribute name="nomenclatureStatus" type="java.lang.String" />
+                <attribute name="fishBand" type="java.lang.String" />-->
+                <collection name="OMIMRecords" referenced-type="OMIM" reverse-reference="genes" />
+        </class>
+
+        <class name="OMIM" is-interface="true">
+                <attribute name="primaryIdentifier" type="java.lang.String" />
+                <collection name="genes" referenced-type="Gene" reverse-reference="OMIMRecords" />
+        </class>
+
+	<class name="Exon" is-interface="true">
+                <reference name="mRNA" referenced-type="MRNA" />
+        </class>
+        
+        <class name="CDS" is-interface="true">
+                <reference name="mRNA" referenced-type="MRNA" />
+        </class>
+
+        <class name="FivePrimeUTR" is-interface="true">
+                <reference name="mRNA" referenced-type="MRNA" />
+        </class>
+
+        <class name="ThreePrimeUTR" is-interface="true">
+                <reference name="mRNA" referenced-type="MRNA" />
+        </class>
+
+	<class name="QTL" extends="SequenceFeature" is-interface="true" >
+                <attribute name="primaryIdentifier" type="java.lang.String" />
+                <attribute name="symbol" type="java.lang.String" />
+		<attribute name="description" type="java.lang.String" />
+	</class>
+
+        <class name="Congenic" extends="Assembly" is-interface="true"/>
+
+</classes>

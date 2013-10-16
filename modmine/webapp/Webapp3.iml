@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="lib9" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../ratmine/dbmodel/dist/ratmine-dbmodel.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../ratmine/webapp/build/webapp/WEB-INF/lib/ratmine-dbmodel.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="library" name="lib3" level="project" />
+    <orderEntry type="library" name="lib1" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../intermine/MineManager/bin/MineManager.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="library" name="lib12" level="project" />
+    <orderEntry type="library" name="lib6" level="project" />
+    <orderEntry type="library" name="lib14" level="project" />
+    <orderEntry type="library" name="lib5" level="project" />
+    <orderEntry type="module" module-name="Gen" />
+    <orderEntry type="module" module-name="Main76" />
+    <orderEntry type="module" module-name="Test44" />
+    <orderEntry type="module" module-name="Logmodel" />
+    <orderEntry type="module" module-name="Test5" />
+    <orderEntry type="module" module-name="Webapp2" />
+    <orderEntry type="module" module-name="Test51" />
+    <orderEntry type="module" module-name="Test40" />
+    <orderEntry type="module" module-name="Test13" />
+    <orderEntry type="module" module-name="Test35" />
+    <orderEntry type="module" module-name="Main100" />
+    <orderEntry type="module" module-name="Main11" />
+    <orderEntry type="module" module-name="Main" />
+    <orderEntry type="module" module-name="Testmodel-webapp-test" />
+    <orderEntry type="module" module-name="Main73" />
+    <orderEntry type="module" module-name="Main45" />
+  </component>
+</module>
+

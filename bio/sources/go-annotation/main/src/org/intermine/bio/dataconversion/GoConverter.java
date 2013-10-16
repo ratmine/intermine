@@ -86,6 +86,10 @@ public class GoConverter extends BioFileConverter
     boolean isHumanTypeAnnotatedAsGene = false;
     private static final String HUMAN = "9606";
 
+	//rgd modification
+    private static final String MOUSE = "10090";
+    private static final String RAT = "10116";
+
     private static final Logger LOG = Logger.getLogger(GoConverter.class);
 
     /**
@@ -189,7 +193,7 @@ public class GoConverter extends BioFileConverter
     public void process(Reader reader) throws ObjectStoreException, IOException {
 
         // Create id resolver
-        if (rslv == null) {
+	if (rslv == null) {
             rslv = IdResolverService.getIdResolverForMOD();
         }
 
@@ -229,15 +233,20 @@ public class GoConverter extends BioFileConverter
             }
 
             int readColumn = config.readColumn();
-            String productId = array[readColumn];
+            
+	    String productId = array[readColumn];
+	    if(readColumn == 1){
+		productId = "RGD:"+productId;
+	    }	
 
             String goId = array[4];
             String qualifier = array[3];
             String strEvidence = array[6];
             String withText = array[7];
-            String annotationExtension = null;
+            String extensionText = null;
             if (array.length >= 16) {
-                annotationExtension = array[15];
+                extensionText = array[15];
+
             }
             if (StringUtils.isNotEmpty(strEvidence)) {
                 storeEvidenceCode(strEvidence);
@@ -261,6 +270,11 @@ public class GoConverter extends BioFileConverter
             String productIdentifier = newProduct(productId, type, organism,
                     dataSource, dataSourceCode, true, null);
 
+
+
+		LOG.info("***********productId now is:"+ productId + " and product identifier is:"+productIdentifier );
+
+
             // null if resolver could not resolve an identifier
             if (productIdentifier != null) {
 
@@ -278,10 +292,28 @@ public class GoConverter extends BioFileConverter
                     allEvidenceForAnnotation = new LinkedHashSet<Evidence>();
                     allEvidenceForAnnotation.add(evidence);
                     goTermGeneToEvidence.put(key, allEvidenceForAnnotation);
+                    Item extension = null;
+                    if (extensionText != null) {
+                        Item goevidence = createItem("GOEvidence");
+                        goevidence.setReference("code", evidenceCodes.get(strEvidence));
+                        if (pubRefId != null) {
+                            goevidence.addToCollection("publications", pubRefId);
+                        }
+                        store(goevidence);
+                        for (String s : extensionText.split("\\|")) {
+                            extension = createItem("AnnotationExtension");
+                            if (!s.isEmpty()) {
+                                extension.setAttribute("extension", s);
+                            }
+                            extension.addToCollection("evidence", goevidence);
+                            store(extension);
+                        }
+                    }
                     Integer storedAnnotationId = createGoAnnotation(productIdentifier, type,
                             goTermIdentifier, organism, qualifier, dataSource, dataSourceCode,
-                            annotationExtension);
+                            extension);
                     evidence.setStoredAnnotationId(storedAnnotationId);
+
                 } else {
                     boolean seenEvidenceCode = false;
                     Integer storedAnnotationId = null;
@@ -361,7 +393,7 @@ public class GoConverter extends BioFileConverter
 
     private Integer createGoAnnotation(String productIdentifier, String productType,
             String termIdentifier, Item organism, String qualifier, String dataSource,
-            String dataSourceCode, String annotationExtension) throws ObjectStoreException {
+            String dataSourceCode, Item annotationExtension) throws ObjectStoreException {
         Item goAnnotation = createItem(annotationClassName);
         goAnnotation.setReference("subject", productIdentifier);
         goAnnotation.setReference("ontologyTerm", termIdentifier);
@@ -369,8 +401,8 @@ public class GoConverter extends BioFileConverter
         if (!StringUtils.isEmpty(qualifier)) {
             goAnnotation.setAttribute("qualifier", qualifier);
         }
-        if (!StringUtils.isEmpty(annotationExtension)) {
-            goAnnotation.setAttribute("annotationExtension", annotationExtension);
+        if (annotationExtension != null) {
+            goAnnotation.addToCollection("extensions", annotationExtension);
         }
 
         goAnnotation.addToCollection("dataSets", getDataset(dataSource, dataSourceCode));
@@ -473,12 +505,15 @@ public class GoConverter extends BioFileConverter
                 }
             }
 
+/*
             if (rslv != null && rslv.hasTaxon(taxonId)) {
                 if ("10116".equals(taxonId)) { // RGD doesn't have prefix in its annotation data
                     accession = "RGD:" + accession;
                 }
+
                 int resCount = rslv.countResolutions(taxonId, accession);
 
+		LOG.info("accession now is:"+accession );
                 if (resCount != 1) {
                     LOG.info("RESOLVER: failed to resolve gene to one identifier, "
                             + "ignoring gene: " + accession + " count: " + resCount + " ID: "
@@ -487,6 +522,23 @@ public class GoConverter extends BioFileConverter
                 }
                 accession = rslv.resolveId(taxonId, accession).iterator().next();
             }
+*/
+
+		if(rslv != null && rslv.hasTaxon(taxonId)) {
+               		LOG.info("accession is:" + accession);
+               		int resCount = rslv.countResolutions(taxonId, accession);
+
+               		if (resCount != 1) {
+                       		LOG.info("RESOLVER: failed to resolve gene to one identifier, "
+                                + "ignoring gene: " + accession + " count: " + resCount + " ID: " + rslv.resolveId(taxonId, accession));
+                       		return null;
+               		}
+
+               		accession = rslv.resolveId(taxonId, accession).iterator().next();
+               		LOG.info("next accession on iterator is:"+accession);
+         	} else {
+              		LOG.info("rslv is nul!!!");
+		}
         } else if ("protein".equalsIgnoreCase(type)) {
             // TODO use values in config
             clsName = "Protein";
@@ -608,6 +660,8 @@ public class GoConverter extends BioFileConverter
             title = "WormBase";
         } else if ("SP".equalsIgnoreCase(sourceCode)) {
             title = "UniProt";
+	} else if ("RGD".equalsIgnoreCase(sourceCode)) {
+            title = "RGD";
         } else if (sourceCode.startsWith("GeneDB")) {
             title = "GeneDB";
         } else if ("SANGER".equalsIgnoreCase(sourceCode)) {

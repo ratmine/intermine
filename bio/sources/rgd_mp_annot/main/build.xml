@@ -1,0 +1,4 @@
+<project name="rgd_mp_annot-tasks" default="default" basedir=".">
+  <description>build rgd_mp_annot tasks</description>
+  <import file="../../../../imbuild/library.xml"/> 
+</project>

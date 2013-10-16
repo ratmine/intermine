@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="true" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="lib13" level="project" />
+    <orderEntry type="library" name="lib8" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../../../intermine/MineManager/bin/MineManager.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module" module-name="Main76" />
+    <orderEntry type="module" module-name="Test35" />
+    <orderEntry type="module" module-name="Main9" />
+    <orderEntry type="module" module-name="Main99" />
+    <orderEntry type="module" module-name="Main86" />
+    <orderEntry type="module" module-name="Test51" />
+    <orderEntry type="module" module-name="Main" />
+    <orderEntry type="module" module-name="Main97" />
+    <orderEntry type="module" module-name="Main45" />
+  </component>
+</module>
+

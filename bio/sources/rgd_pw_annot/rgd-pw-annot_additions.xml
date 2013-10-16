@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<classes>
+<class name="PWAnnotation" extends="OntologyAnnotation" is-interface="true">
+  <attribute name="withText" type="java.lang.String"/>
+  <collection name="evidence" referenced-type="PWEvidence"/>
+  <collection name="with" referenced-type="BioEntity"/>
+</class>
+<class name="Gene" is-interface="true">
+  <collection name="pwAnnotation" referenced-type="PWAnnotation"/>
+</class>
+<class name="PWEvidence" is-interface="true">
+  <reference name="code" referenced-type="PWEvidenceCode" />
+  <collection name="publications" referenced-type="Publication"/>
+</class>
+<class name="PWEvidenceCode" extends="GOEvidenceCode" is-interface="true"/>
+</classes>

@@ -1,0 +1,5 @@
+<project name="rat_orthologs" default="default" basedir=".">
+  <description>build, test, package rat_orthologs</description>
+  
+  <import file="../../../imbuild/source.xml"/>
+</project>

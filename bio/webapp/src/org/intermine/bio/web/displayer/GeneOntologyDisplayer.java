@@ -101,7 +101,7 @@ public class GeneOntologyDisplayer extends ReportDisplayer
         }
 
         if (!goLoadedForOrganism) {
-            String noGoMessage = "No Gene Ontology annotation loaded for " + organismName;
+            String noGoMessage = "PJ - No Gene Ontology annotation loaded for " + organismName;
             request.setAttribute("noGoMessage", noGoMessage);
         } else {
             Model model = im.getModel();

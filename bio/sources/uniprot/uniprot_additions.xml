@@ -50,5 +50,7 @@
 </class>
 <class name="Comment" is-interface="true">
   <collection name="publications" referenced-type="Publication"/>
+  <attribute name="type" type="java.lang.String"/>
+  <attribute name="description" type="java.lang.String"/>
 </class>
 </classes>

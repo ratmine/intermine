@@ -1,0 +1,5 @@
+<project name="rgd_pw_annot" default="default" basedir=".">
+  <description>build, test, package rgd_pw_annot</description>
+  
+  <import file="../../../imbuild/source.xml"/>
+</project>

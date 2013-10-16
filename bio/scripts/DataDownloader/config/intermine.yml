@@ -28,6 +28,8 @@ default_sources:
   - "SGDIdentifiers"
   - "ZFINIdentifiers"
   - "MousePheno"
+  - "HumanGeneIdentifiers"
+  - "HPO"
 
 UniProt:
     organisms:

@@ -65,11 +65,14 @@ public class HomologueDisplayer extends ReportDisplayer
             new TreeMap<String, Set<ResultElement>>();
         Map<String, String> organismIds = new HashMap<String, String>();
 
+	LOG.error("ENTERING HOMOLOGUE CLASS!!!!!!");
+
         Path symbolPath = null;
         Path primaryIdentifierPath = null;
         try {
             symbolPath = new Path(im.getModel(), "Gene.symbol");
             primaryIdentifierPath = new Path(im.getModel(), "Gene.primaryIdentifier");
+		LOG.info("here is the symbolPath:"+symbolPath + " primaryIdentifierPath is: " + primaryIdentifierPath);
         } catch (PathException e) {
             return;
         }
@@ -106,6 +109,7 @@ public class HomologueDisplayer extends ReportDisplayer
                 }
             } catch (IllegalAccessException e) {
                 LOG.error("Failed to resolve path: " + symbolPath + " for gene: " + gene);
+		LOG.info("Failed to resolve path: " + symbolPath + " for gene: " + gene);
             }
         }
 

@@ -60,15 +60,30 @@ public class IdResolverService
     public static IdResolver getIdResolverByOrganism(Set<String> taxonIds) {
         // HACK - for worm in ncbi
         IdResolverService.getWormIdResolver();
+	IdResolverService.getRgdMgiIdResolver();
+	IdResolverService.getRgdEntrezIdResolver();
+        // HACK - resolve human ids to HGNC symbols
+        //commented out by pushkala
+	//IdResolverService.getHumanIdResolver();
+        taxonIds.remove("6239");
+        taxonIds.remove("9606");
         return new EntrezGeneIdResolverFactory().getIdResolver(taxonIds);
     }
 
     public static IdResolver getIdResolverForMOD() {
-        String[] modTaxonIds = {"9606", "7227", "7955", "10090","10116", "4932", "6239"};
+         String[] modTaxonIds = {"9606", "7227", "7955", "10090","10116", "4932", "6239"};
         // String[] modTaxonIdsWithoutWorm = {"9606", "7227", "7955", "10090","10116", "4932"};
         // HACK - In entrezIdResolver_config.properties, 6239 (worm) is disabled.
+	return getIdResolverByOrganism(new HashSet<String>(Arrays.asList(modTaxonIds)));
+        //return new EntrezGeneIdResolverFactory().getIdResolver(new HashSet<String>(Arrays.asList(modTaxonIds)));
+
+        /*
+	String[] modTaxonIdsWithoutHuman = {"7227", "7955", "10090","10116", "4932", "6239"};
+        // HACK - resolve human ids to HGNC symbols
+        IdResolverService.getHumanIdResolver();
         return new EntrezGeneIdResolverFactory()
-                .getIdResolver(new HashSet<String>(Arrays.asList(modTaxonIds)));
+                .getIdResolver(new HashSet<String>(Arrays.asList(modTaxonIdsWithoutHuman)));
+	*/
     }
 
     /**
@@ -244,6 +259,64 @@ public class IdResolverService
     public static IdResolver getRatIdResolver(String clsName, boolean failOnError) {
         return new RgdIdentifiersResolverFactory(clsName).getIdResolver(failOnError);
     }
+
+
+    /**
+     * Create a rgd-mgi id resolver
+     * @return an IdResolver
+     */
+    public static IdResolver getRgdMgiIdResolver() {
+        return new RgdMgiIdentifiersResolverFactory().getIdResolver(false);
+    }
+
+    /**
+     * Create a rgd-mgi id resolver
+     * @param clsName SO term
+     * @return an IdResolver
+     */
+    public static IdResolver getRgdMgiIdResolver(String clsName) {    
+	return new RgdMgiIdentifiersResolverFactory(clsName).getIdResolver(false);
+    }
+
+    /**
+     * Create a rgi-mgi id resolver
+     * @param clsName SO term
+     * @param failOnError if false swallow any exceptions and return null
+     * @return an IdResolver
+     */
+    public static IdResolver getRgdMgiIdResolver(String clsName, boolean failOnError) {
+        return new RgdMgiIdentifiersResolverFactory(clsName).getIdResolver(failOnError);
+    }
+
+
+    /** 
+     * Create a rgd-entrez id resolver
+     * @return an IdResolver
+     */
+    public static IdResolver getRgdEntrezIdResolver() {
+        return new RgdHumanEntrezIdentifiersResolverFactory().getIdResolver(false);
+    }
+        
+    /**
+     * Create a rgd-entrez id resolver
+     * @param clsName SO term
+     * @return an IdResolver
+     */
+    public static IdResolver getRgdEntrezIdResolver(String clsName) { 
+        return new RgdHumanEntrezIdentifiersResolverFactory(clsName).getIdResolver(false);
+    }
+        
+    /**
+     * Create a rgd-entrez id resolver
+     * @param clsName SO term
+     * @param failOnError if false swallow any exceptions and return null
+     * @return an IdResolver
+     */
+    public static IdResolver getRgdEntrezIdResolver(String clsName, boolean failOnError) {
+        return new RgdHumanEntrezIdentifiersResolverFactory(clsName).getIdResolver(failOnError);
+    }
+
+
 
     /**
      * Create a HGNC human gene id resolver
