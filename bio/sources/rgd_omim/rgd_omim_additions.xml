@@ -13,6 +13,10 @@
 	<collection name="associatedPhenotypes" referenced-type="OMIMPhenotype" />
 </class>
 
+<class name="Gene" is-interface="true">
+	<collection name="OMIMRecords" referenced-type="OMIM" reverse-reference="genes" />
+</class>
+
 <class name="OMIMMethod" is-interface="true">
 	<attribute name="code" type="java.lang.String"/>
 	<attribute name="description" type="java.lang.String"/>

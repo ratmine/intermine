@@ -40,6 +40,10 @@ public class RgdGff3GFF3RecordHandler extends GFF3RecordHandler
         super(model);
     }
     
+
+
+
+
     private String getPrimaryIdentifier(GFF3Record record) {
         String primaryId = record.getId();
 
@@ -62,7 +66,11 @@ public class RgdGff3GFF3RecordHandler extends GFF3RecordHandler
                     //LOG.info("*********************here is my dbxrefTag.." + tag);
                     tag = tag.trim();
                     //LOG.info("*********************here is trimmed tag.." + tag);
-                    
+                	
+		    if(tag.contains("OMIM")){
+			LOG.info("***** found OMIM identiier.."+tag.substring(5));
+		    }   
+		 
 		    if ((tag.contains("MGD")) && (organism.equals(MOUSE_TAXON))) {
                         LOG.info("**********************here is MGI id.." + tag.substring(4));
                         return tag.substring(4);
@@ -76,6 +84,54 @@ public class RgdGff3GFF3RecordHandler extends GFF3RecordHandler
         }
         return primaryId;
     }
+
+
+/**
+	private List<Item> getOmimRecords(GFF3Record record) {
+        	String primaryId = record.getId();
+        	List<String> dbxrefs = record.getDbxrefs();
+        	if (dbxrefs == null) return primaryId;
+
+        	String organism = getOrganism().getAttribute("taxonId").getValue();
+        	LOG.info("************************here is my organism.." + organism + "#############################");
+		
+		List<Items> omimItems = new ArrayList<Items>();
+
+
+        	for (String xref: dbxrefs) {
+                	LOG.info("************************here is my xref.." + xref);
+                	String[] dbXrefList = StringUtil.split(xref, ",");
+                	for (String tag : dbXrefList) {
+                    		if (tag == null) {
+                        		//LOG.info("***************NULL tag:"+tag);
+                        		continue;
+                    		}
+                    		//LOG.info("*********************here is my dbxrefTag.." + tag);
+                    		tag = tag.trim();
+                    		//LOG.info("*********************here is trimmed tag.." + tag);
+
+                    		if(tag.contains("OMIM")){
+                        		LOG.info("***** found OMIM identiier.."+tag.substring(5));
+					Item omim = createItem("OMIM");
+					omim.setAttribute("primaryIdentifier", tag.substring(5));
+					omimItems.add(omim);
+                    		}else{
+                        		LOG.info("************ OMIM not found for primaryId:"+primaryId);
+                    		}
+                	}
+        	}
+        	
+		if(omimItems!=null && omimItems.size()>0){
+			return omimItems;	
+		}else{
+			return null;
+		}
+    	}
+**/
+
+
+
+
 
     /**
      * {@inheritDoc}
@@ -120,6 +176,11 @@ public class RgdGff3GFF3RecordHandler extends GFF3RecordHandler
 	    LOG.info("^^^^^^here is the entrez id:"+humanPrimaryId);
 	    feature.setAttribute("primaryIdentifier", humanPrimaryId);
 	}
+
+	//List<Iterm> omimRecords = getOmimRecords(record);
+	//if(omimRecords != null && omimRecords.size()>0){
+	//	feature.setCollection(omimRecords);
+	//}
 
     }
 

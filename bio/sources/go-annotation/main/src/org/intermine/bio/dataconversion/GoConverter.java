@@ -194,6 +194,7 @@ public class GoConverter extends BioFileConverter
 
         // Create id resolver
 	if (rslv == null) {
+		LOG.info("idResolver is null!!!");
             rslv = IdResolverService.getIdResolverForMOD();
         }
 
@@ -216,6 +217,8 @@ public class GoConverter extends BioFileConverter
             String db = array[0];
 
             String taxonId = parseTaxonId(array[12]);
+		LOG.info("taxonId is:"+taxonId);
+
             Config config = configs.get(taxonId);
             if (config == null) {
                 config = defaultConfig;
@@ -235,10 +238,12 @@ public class GoConverter extends BioFileConverter
             int readColumn = config.readColumn();
             
 	    String productId = array[readColumn];
+	    
 	    if(readColumn == 1){
 		productId = "RGD:"+productId;
 	    }	
-
+		LOG.info("productId is:"+productId);
+		
             String goId = array[4];
             String qualifier = array[3];
             String strEvidence = array[6];
@@ -487,12 +492,19 @@ public class GoConverter extends BioFileConverter
             String dataSource, String dataSourceCode, boolean createOrganism,
             String field) throws ObjectStoreException {
         String idField = field;
+	LOG.info("in newproduct, idFiled is:"+idField);
+
         String accession = identifier;
+	LOG.info("accession is:"+accession);
+	
         String clsName = null;
         // find gene attribute first to see if organism should be part of key
         if ("gene".equalsIgnoreCase(type)) {
+		LOG.info("type is gene:"+type);
+
             clsName = "Gene";
             String taxonId = organism.getAttribute("taxonId").getValue();
+		LOG.info("in newProduct, taxonId is:"+taxonId);
             if (idField == null) {
                 Config config = configs.get(taxonId);
                 if (config == null) {
@@ -525,6 +537,7 @@ public class GoConverter extends BioFileConverter
 */
 
 		if(rslv != null && rslv.hasTaxon(taxonId)) {
+			LOG.info("resolver has taxonId"+taxonId);
                		LOG.info("accession is:" + accession);
                		int resCount = rslv.countResolutions(taxonId, accession);
 
