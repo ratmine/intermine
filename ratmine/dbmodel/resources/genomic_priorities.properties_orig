@@ -1,0 +1,65 @@
+#contains only classes that come from more than one source
+#for each class contained every source for that class must be listed
+
+# priority for fields declared in superclass are not overridden by different order in subclass
+# e.g. identfier and organism always have priority as defined in BioEntity
+
+# For example, to give interpro prioritiy over uniprot for the 'shortName' field of ProteinDomain:
+#
+# ProteinDomain.shortName = interpro, uniprot
+
+# To give flybase priority over all other sources for Gene name:
+#
+# Gene.name = flybase, *
+
+BioEntity.organism = rat-genes, human-genes, mouse-genes, go-annotation, uniprot-rat, rat-gff, human-gff, mouse-gff, *
+
+Gene.primaryIdentifier = rat-gff, human-gff, mouse-gff, rat-genes, human-genes, mouse-genes, uniprot-rat, *
+
+Gene.secondaryIdentifier = rat-genes, human-genes, mouse-genes, uniprot-rat, rat-gff, human-gff, mouse-gff, *
+
+Gene.symbol = rat-gff, human-gff, mouse-gff, rat-genes, human-genes, mouse-genes, uniprot-rat, *
+
+Gene.description = rat-genes, rat-gff, *
+
+Gene.name = rat-gff, rat-genes, *
+
+Gene.length = rat-gff, * 
+
+Gene.ncbiGeneNumber = rat-genes, human-genes, mouse-genes, rat-gff, *
+
+Gene.ensemblIdentifier = rat-genes, human-genes, mouse-genes, rat-gff, *
+
+QTL.chromosome = rat-gff, human-gff, mouse-gff, rat-qtls, human-qtls, *
+
+QTL.symbol = rat-qtls, human-qtls, mouse-qtls, rat-gff, human-gff, mouse-gff, *
+
+OMIM.primaryIdentifier = omim-text, omim-genes, *
+
+OMIM.title = omim-text, omim-genes, *
+
+OntologyTerm.ontology = go-annotation, rat-gff, rat-pw-annot, rat-do-annot, rat-mp-annot, uniprot-rat, human-gff, mouse-gff, *
+
+SimpleSequenceLengthVariation.symbol = rat-sslps, human-sslps, mouse-sslps, rat-gff, human-gff, mouse-gff, *
+
+SimpleSequenceLengthVariation.primaryIdentifier = rat-sslps, human-sslps, mouse-sslps, rat-gff, human-gff, mouse-gff, *
+
+SimpleSequenceLengthVariation.expectedSize = rat-sslps, human-sslps, mouse-sslps, rat-gff, human-gff, mouse-gff, *
+
+SimpleSequenceLengthVariation.length = rat-sslps, human-sslps, mouse-sslps, rat-gff, human-gff, mouse-gff, *
+
+SimpleSequenceLengthVariation.chromosomeLocation = rat-gff, human-gff, mouse-gff, rat-sslps, human-sslps, mouse-sslps, *
+
+Protein.primaryAccession = uniprot-rat, *
+
+Protein.sequence = uniprot-rat, *
+
+Protein.md5checksum = uniprot-rat, *
+
+ProteinDomain.shortName = uniprot-rat, *
+
+SimpleSequenceLengthVariation.chromosome = rat-gff, *
+
+Synonym.subject = rat-genes, rat-gff, uniprot-rat, *
+
+SequenceFeature.sequenceOntologyTerm = rat-gff, go-annotation, uniprot-rat, rat-kegg-pathway, rat-do-annot, rat-mp-annot, rat-pw-annot, human-gff, mouse-gff, *
