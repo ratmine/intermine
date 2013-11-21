@@ -86,16 +86,16 @@ public class RgdGff3GFF3RecordHandler extends GFF3RecordHandler
     }
 
 
-/**
+
 	private List<Item> getOmimRecords(GFF3Record record) {
         	String primaryId = record.getId();
         	List<String> dbxrefs = record.getDbxrefs();
-        	if (dbxrefs == null) return primaryId;
+        	if (dbxrefs == null) return null;
 
         	String organism = getOrganism().getAttribute("taxonId").getValue();
         	LOG.info("************************here is my organism.." + organism + "#############################");
 		
-		List<Items> omimItems = new ArrayList<Items>();
+		    List<Item> omimItems = new ArrayList<Item>();
 
 
         	for (String xref: dbxrefs) {
@@ -112,9 +112,11 @@ public class RgdGff3GFF3RecordHandler extends GFF3RecordHandler
 
                     		if(tag.contains("OMIM")){
                         		LOG.info("***** found OMIM identiier.."+tag.substring(5));
-					Item omim = createItem("OMIM");
-					omim.setAttribute("primaryIdentifier", tag.substring(5));
-					omimItems.add(omim);
+					            Item omim = converter.createItem("OMIM");
+                                omim.setAttribute("primaryIdentifier", tag.substring(5));
+                                omimItems.add(omim);
+                                addItem(omim);
+
                     		}else{
                         		LOG.info("************ OMIM not found for primaryId:"+primaryId);
                     		}
@@ -127,7 +129,6 @@ public class RgdGff3GFF3RecordHandler extends GFF3RecordHandler
 			return null;
 		}
     	}
-**/
 
 
 
@@ -175,12 +176,14 @@ public class RgdGff3GFF3RecordHandler extends GFF3RecordHandler
 	    String humanPrimaryId = getPrimaryIdentifier(record);
 	    LOG.info("^^^^^^here is the entrez id:"+humanPrimaryId);
 	    feature.setAttribute("primaryIdentifier", humanPrimaryId);
+		
+		List<Item> omimRecords = getOmimRecords(record);
+        if(omimRecords != null && omimRecords.size()>0){
+            for(Item omimItem: omimRecords){
+                feature.addToCollection("OMIMRecords", omimItem);
+            }
+        }
 	}
-
-	//List<Iterm> omimRecords = getOmimRecords(record);
-	//if(omimRecords != null && omimRecords.size()>0){
-	//	feature.setCollection(omimRecords);
-	//}
 
     }
 
