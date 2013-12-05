@@ -29,6 +29,8 @@ public class RgdGff3GFF3RecordHandler extends GFF3RecordHandler
     private static final String RAT_TAXON="10116";
     private static final String HUMAN_TAXON="9606";
     private Map<String, Item> geneMap = new HashMap<String, Item>();
+    private final Map<String, Item> omimIdMap = new HashMap<String, Item>();
+    private final Map<String, Item> keggIdMap = new HashMap<String, Item>();
 
     protected static final Logger LOG = Logger.getLogger(RgdGff3GFF3RecordHandler.class);
 
@@ -68,8 +70,12 @@ public class RgdGff3GFF3RecordHandler extends GFF3RecordHandler
                     //LOG.info("*********************here is trimmed tag.." + tag);
                 	
 		    if(tag.contains("OMIM")){
-			LOG.info("***** found OMIM identiier.."+tag.substring(5));
-		    }   
+			    LOG.info("***** found OMIM identiier.."+tag.substring(5));
+		    }
+
+            if(tag.contains("KEGGPathway")){
+			    LOG.info("***** found KEGG identifier.."+tag.substring(12));
+		    }
 		 
 		    if ((tag.contains("MGD")) && (organism.equals(MOUSE_TAXON))) {
                         LOG.info("**********************here is MGI id.." + tag.substring(4));
@@ -112,10 +118,20 @@ public class RgdGff3GFF3RecordHandler extends GFF3RecordHandler
 
                     		if(tag.contains("OMIM")){
                         		LOG.info("***** found OMIM identiier.."+tag.substring(5));
-					            Item omim = converter.createItem("OMIM");
-                                omim.setAttribute("primaryIdentifier", tag.substring(5));
+
+                                Item omim;
+
+                                if(omimIdMap.containsKey(tag.substring(5))){
+                                    omim = omimIdMap.get(tag.substring(5));
+                                }else{
+                                    omim = converter.createItem("OMIM");
+                                    omim.setAttribute("primaryIdentifier", tag.substring(5));
+                                    omimIdMap.put(tag.substring(5), omim);
+                                    addItem(omim);
+
+                                }
                                 omimItems.add(omim);
-                                addItem(omim);
+
 
                     		}else{
                         		LOG.info("************ OMIM not found for primaryId:"+primaryId);
@@ -128,7 +144,62 @@ public class RgdGff3GFF3RecordHandler extends GFF3RecordHandler
 		}else{
 			return null;
 		}
-    	}
+   }
+
+
+
+   private List<Item> getKeggRecords(GFF3Record record) {
+        	String primaryId = record.getId();
+        	List<String> dbxrefs = record.getDbxrefs();
+        	if (dbxrefs == null) return null;
+
+        	String organism = getOrganism().getAttribute("taxonId").getValue();
+        	LOG.info("************************here is my organism.." + organism + "#############################");
+
+		    List<Item> keggItems = new ArrayList<Item>();
+
+
+        	for (String xref: dbxrefs) {
+                	LOG.info("************************here is my xref.." + xref);
+                	String[] dbXrefList = StringUtil.split(xref, ",");
+                	for (String tag : dbXrefList) {
+                    		if (tag == null) {
+                        		//LOG.info("***************NULL tag:"+tag);
+                        		continue;
+                    		}
+                    		//LOG.info("*********************here is my dbxrefTag.." + tag);
+                    		tag = tag.trim();
+                    		//LOG.info("*********************here is trimmed tag.." + tag);
+
+                    		if(tag.contains("KEGGPathway")){
+                        		LOG.info("*****in getkeggRecords method, found KEGG identifier.."+tag.substring(12));
+
+                                Item kegg;
+
+                                if(keggIdMap.containsKey(tag.substring(12))){
+                                    kegg = keggIdMap.get(tag.substring(12));
+                                }else{
+                                    kegg = converter.createItem("Pathway");
+                                    kegg.setAttribute("identifier", tag.substring(12));
+                                    keggIdMap.put(tag.substring(12), kegg);
+                                    addItem(kegg);
+
+                                }
+                                keggItems.add(kegg);
+
+
+                    		}else{
+                        		LOG.info("************ KEGG not found for primaryId:"+primaryId);
+                    		}
+                	}
+        	}
+
+		if(keggItems!=null && keggItems.size()>0){
+			return keggItems;
+		}else{
+			return null;
+		}
+   }
 
 
 
@@ -170,20 +241,28 @@ public class RgdGff3GFF3RecordHandler extends GFF3RecordHandler
         if (MOUSE_TAXON.equals(organism)) {
             String mgiId = getPrimaryIdentifier(record);
             LOG.info("^^^^^^^here is the mgiid:"+mgiId);
-	    feature.setAttribute("primaryIdentifier", mgiId);
+	        feature.setAttribute("primaryIdentifier", mgiId);
         }
-	if(HUMAN_TAXON.equals(organism)){
-	    String humanPrimaryId = getPrimaryIdentifier(record);
-	    LOG.info("^^^^^^here is the entrez id:"+humanPrimaryId);
-	    feature.setAttribute("primaryIdentifier", humanPrimaryId);
-		
-		List<Item> omimRecords = getOmimRecords(record);
-        if(omimRecords != null && omimRecords.size()>0){
-            for(Item omimItem: omimRecords){
-                feature.addToCollection("OMIMRecords", omimItem);
+
+        if(HUMAN_TAXON.equals(organism)){
+            String humanPrimaryId = getPrimaryIdentifier(record);
+            LOG.info("^^^^^^here is the entrez id:"+humanPrimaryId);
+            feature.setAttribute("primaryIdentifier", humanPrimaryId);
+
+            List<Item> omimRecords = getOmimRecords(record);
+            if(omimRecords != null && omimRecords.size()>0){
+                for(Item omimItem: omimRecords){
+                    feature.addToCollection("OMIMRecords", omimItem);
+                }
             }
         }
-	}
+
+        List<Item> keggPathwayRecords = getKeggRecords(record);
+        if(keggPathwayRecords != null && keggPathwayRecords.size()>0){
+            for(Item keggItem: keggPathwayRecords){
+                feature.addToCollection("pathways", keggItem);
+            }
+        }
 
     }
 
